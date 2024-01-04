@@ -1,0 +1,40 @@
+import { Button } from "std-widgets.slint";
+export component MainWindow inherits Window {
+	in-out property <string> send_message;
+	in-out property <int> time;
+	init => {
+		send_message = "Hello World!";
+		time = 0;
+		debug(time);
+	}
+	// 回调可在外部重写
+	callback display_message();
+	// 函数只能内部调用
+	public function func() {
+		time = time+1;
+	}
+	callback time_add;
+	time_add => {
+		func();
+	}
+	no-frame: false;
+	min-width: 800px;
+	min-height: 600px;
+	//icon: @image-url("../../image/Chats.png");
+	title: "Chats";
+	display_message() => {
+		send_message = "Hello World!";
+	}
+	Text {
+		x: 10px;
+    	y: 10px;
+		text: send_message;
+	}
+	Button {
+		text: "Click me!";
+		clicked => {
+			display_message();
+			func()
+		}
+	}
+}
