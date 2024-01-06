@@ -2,6 +2,7 @@ import { Button } from "std-widgets.slint";
 export component MainWindow inherits Window {
 	in-out property <string> send_message;
 	in-out property <int> time;
+	// 初始化代码块
 	init => {
 		send_message = "Hello World!";
 		time = 0;
@@ -20,7 +21,7 @@ export component MainWindow inherits Window {
 	no-frame: false;
 	min-width: 800px;
 	min-height: 600px;
-	//icon: @image-url("../../image/Chats.png");
+	icon: @image-url("../../image/Chats.png");
 	title: "Chats";
 	display_message() => {
 		send_message = "Hello World!";

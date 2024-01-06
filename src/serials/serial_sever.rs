@@ -1,6 +1,6 @@
-use serialport::SerialPort;
-use std::{io, time::Duration};
+use serialport::{Error, SerialPort};
 use std::thread;
+use std::{io, time::Duration};
 pub struct SerialSever {
     port: Box<dyn SerialPort>,
 }
@@ -20,15 +20,16 @@ impl SerialSever {
         self.port.write(output).expect("Write failed!");
     }
     // 读取串口数据
-    pub fn read_message(&mut self) {
+    pub fn read_message(&mut self) -> Result<Vec<u8>, ()> {
         let mut serial_buf: Vec<u8> = vec![0; 32];
-        loop {
-            match self.port.read(serial_buf.as_mut_slice()) {
-                Ok(t) => println!("{:?}", t),
-                //Ok(t) => io::stdout().write_all(&serial_buf[..t]).unwrap(),
-                Err(ref e) if e.kind() == io::ErrorKind::TimedOut => (),
-                Err(e) => eprintln!("{:?}", e),
+        match self.port.read(serial_buf.as_mut_slice()) {
+            Ok(t) => {
+                println!("{:?}", t);
+                Ok(serial_buf)
             }
+            //Ok(t) => io::stdout().write_all(&serial_buf[..t]).unwrap(),
+            Err(ref e) if e.kind() == io::ErrorKind::TimedOut => Err(()),
+            Err(e) => Err(eprintln!("{:?}", e)),
         }
     }
 }
